@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/organization"
+            android:title="@string/my_organization" />
+        <item
+            android:id="@+id/schedule"
+            android:title="@string/my_schedule" />
+        <item
+            android:id="@+id/appointment"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/my_appointment" />
+    </group>
+</menu>
