@@ -1,7 +1,9 @@
 package com.easybook.entity;
 
+import java.util.UUID;
+
 public class Service {
-  private Long id;
+  private UUID id;
 
   private String userCreatorLogin;
 
@@ -9,11 +11,11 @@ public class Service {
 
   private Long duration;
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 

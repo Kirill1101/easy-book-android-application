@@ -1,9 +1,10 @@
 package com.easybook.entity;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Organization {
-  private Long id;
+  private UUID id;
 
   private String userCreatorLogin;
 
@@ -11,11 +12,11 @@ public class Organization {
 
   private List<Schedule> schedules;
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 

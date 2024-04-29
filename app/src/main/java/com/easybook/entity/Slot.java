@@ -1,21 +1,22 @@
 package com.easybook.entity;
 
 import java.time.LocalTime;
+import java.util.UUID;
 
 public class Slot {
-  private Long id;
+  private UUID id;
 
   private LocalTime startTime;
 
   private LocalTime endTime;
 
-  private Long appointmentId;
+  private UUID appointmentId;
 
-  public Long getId() {
+  public UUID getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
@@ -35,11 +36,11 @@ public class Slot {
     this.endTime = endTime;
   }
 
-  public Long getAppointmentId() {
+  public UUID getAppointmentId() {
     return appointmentId;
   }
 
-  public void setAppointmentId(Long appointmentId) {
+  public void setAppointmentId(UUID appointmentId) {
     this.appointmentId = appointmentId;
   }
 }

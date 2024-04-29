@@ -13,7 +13,7 @@ public class StartActivity extends AppCompatActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_home);
 
         SharedPreferences preferences = getSharedPreferences("auth", MODE_PRIVATE);
         String token = preferences.getString("token",null);

@@ -15,4 +15,6 @@
     <string name="my_organization">"Мои организации"</string>
     <string name="my_schedule">"Мои расписания"</string>
     <string name="my_appointment">"Мои записи"</string>
+    <string name="profile">"Профиль"</string>
+    <string name="logout">"Выйти"</string>
 </resources>

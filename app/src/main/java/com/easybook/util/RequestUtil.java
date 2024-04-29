@@ -1,15 +1,24 @@
 package com.easybook.util;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+
+import com.easybook.activity.AuthActivity;
+import com.easybook.activity.HomeActivity;
 import com.easybook.entity.UserCredential;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.Optional;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -20,35 +29,45 @@ public class RequestUtil {
     public static final OkHttpClient HTTP_CLIENT = new OkHttpClient();
     public static final MediaType MEDIA_TYPE = MediaType.get("application/json; charset=utf-8");
     public static final String BASE_AUTH_URL = "http://195.133.32.250:8080/auth";
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    public static final String BASE_ORGANIZATION_URL = "http://195.133.32.250:8080/organization";
+    public static final String BASE_SCHEDULE_URL = "http://195.133.32.250:8080/schedule";
+    public static final String BASE_APPOINTMENT_URL = "http://195.133.32.250:8080/appointment";
+    public static final String BASE_SLOT_URL = "http://195.133.32.250:8080/slot";
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    public static String getTokenByUserCredential(UserCredential userCredential)
-            throws IOException {
-        RequestBody body = RequestBody.create(
-                OBJECT_MAPPER.writeValueAsString(userCredential), MEDIA_TYPE);
+
+
+    public static void refreshToken(SharedPreferences preferences) {
+        UserCredential userCredential = new UserCredential();
+        userCredential.setLogin(preferences.getString("login", ""));
+        userCredential.setPassword(preferences.getString("password", ""));
+        RequestBody body = null;
+        try {
+            body = RequestBody.create(
+                    OBJECT_MAPPER.writeValueAsString(userCredential), RequestUtil.MEDIA_TYPE);
+        } catch (JsonProcessingException e) {
+        }
         Request request = new Request.Builder()
-                .url(BASE_AUTH_URL + "/token")
+                .url(RequestUtil.BASE_AUTH_URL + "/token")
                 .post(body)
                 .build();
-        try (Response response = HTTP_CLIENT.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException(response.message());
+        RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
             }
-            return response.body().string();
-        }
-    }
 
-    public static void registerUser(UserCredential userCredential) throws IOException {
-        RequestBody body = RequestBody.create(
-                OBJECT_MAPPER.writeValueAsString(userCredential), MEDIA_TYPE);
-        Request request = new Request.Builder()
-                .url(BASE_AUTH_URL + "/register")
-                .post(body)
-                .build();
-        try (Response response = HTTP_CLIENT.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException(response.message());
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                try {
+                    if (!response.isSuccessful()) {
+                        throw new IOException(response.message());
+                    }
+                    SharedPreferences.Editor prefEditor = preferences.edit();
+                    prefEditor.putString("token", response.body().string());
+                    prefEditor.apply();
+                } catch (IOException e) {
+                }
             }
-        }
+        });
     }
 }
