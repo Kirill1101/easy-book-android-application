@@ -60,17 +60,17 @@ public class ScheduleFragment extends Fragment implements
         RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                RequestUtil.makeSnackBar(activity, view, e.getMessage());
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 if (!response.isSuccessful()) {
-                    Snackbar.make(view, response.message(), Snackbar.LENGTH_LONG).show();
+                    RequestUtil.makeSnackBar(activity, view, response.message());
                 }
                 try {
                     if (!response.isSuccessful()) {
-                        Snackbar.make(view, response.message(), Snackbar.LENGTH_LONG).show();
+                        RequestUtil.makeSnackBar(activity, view, response.message());
                     }
                     Spinner dateSpinner = view.findViewById(R.id.date_spinner);
                     dateSpinner.setOnItemSelectedListener(thisFragment);
@@ -93,7 +93,7 @@ public class ScheduleFragment extends Fragment implements
                         gridView.setAdapter(slotGridAdapter);
                     });
                 } catch (Exception e) {
-                    Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                    RequestUtil.makeSnackBar(activity, view, e.getMessage());
                 }
             }
         });

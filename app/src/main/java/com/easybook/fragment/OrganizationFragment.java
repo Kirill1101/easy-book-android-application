@@ -49,17 +49,17 @@ public class OrganizationFragment extends Fragment {
         RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                RequestUtil.makeSnackBar(activity, view, e.getMessage());
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 if (!response.isSuccessful()) {
-                    Snackbar.make(view, response.message(), Snackbar.LENGTH_LONG).show();
+                    RequestUtil.makeSnackBar(activity, view, response.message());
                 }
                 try {
                     if (!response.isSuccessful()) {
-                        Snackbar.make(view, response.message(), Snackbar.LENGTH_LONG).show();
+                        RequestUtil.makeSnackBar(activity, view, response.message());
                     }
                     RecyclerView recyclerView = view.findViewById(R.id.schedule_list);
                     TextView organizationTitle = view.findViewById(R.id.organization_title);
@@ -77,7 +77,7 @@ public class OrganizationFragment extends Fragment {
                         recyclerView.setAdapter(scheduleAdapter);
                     });
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    RequestUtil.makeSnackBar(activity, view, e.getMessage());
                 }
             }
         });

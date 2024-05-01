@@ -19,6 +19,7 @@ import java.util.List;
 
 public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapter.ViewHolder> {
     private final LayoutInflater inflater;
+
     private final List<Organization> organizations;
 
     private final FragmentManager fragmentManager;

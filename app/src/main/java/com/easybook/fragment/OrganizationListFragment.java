@@ -3,6 +3,8 @@ package com.easybook.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -32,8 +34,16 @@ public class OrganizationListFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.organization_list_menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
         Activity activity = this.getActivity();
 
         String token = activity.
@@ -48,17 +58,17 @@ public class OrganizationListFragment extends Fragment {
         RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                RequestUtil.makeSnackBar(activity, view, e.getMessage());
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 if (!response.isSuccessful()) {
-                    Snackbar.make(view, response.message(), Snackbar.LENGTH_LONG).show();
+                    RequestUtil.makeSnackBar(activity, view, response.message());
                 }
                 try {
                     if (!response.isSuccessful()) {
-                        Snackbar.make(view, response.message(), Snackbar.LENGTH_LONG).show();
+                        RequestUtil.makeSnackBar(activity, view, response.message());
                     }
                     RecyclerView recyclerView = view.findViewById(R.id.organization_list);
                     String respStr = response.body().string();
@@ -74,7 +84,7 @@ public class OrganizationListFragment extends Fragment {
                         recyclerView.setAdapter(organizationAdapter);
                     });
                 } catch (Exception e) {
-                    Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_LONG).show();
+                    RequestUtil.makeSnackBar(activity, view, e.getMessage());
                 }
             }
         });
