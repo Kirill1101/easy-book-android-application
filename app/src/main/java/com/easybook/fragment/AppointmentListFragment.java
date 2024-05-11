@@ -76,13 +76,13 @@ public class AppointmentListFragment extends Fragment {
                     List<Appointment> appointments =
                             RequestUtil.OBJECT_MAPPER.readValue(respStr,
                                     new TypeReference<List<Appointment>>() {});
-                    AppointmentAdapter organizationAdapter = new AppointmentAdapter(view.getContext(),
+                    AppointmentAdapter appointmentAdapter = new AppointmentAdapter(view.getContext(),
                             appointments,
                             getParentFragmentManager());
                     activity.runOnUiThread(() -> {
                         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
                                 DividerItemDecoration.VERTICAL));
-                        recyclerView.setAdapter(organizationAdapter);
+                        recyclerView.setAdapter(appointmentAdapter);
                     });
                 } catch (Exception e) {
                     RequestUtil.makeSnackBar(activity, view, e.getMessage());

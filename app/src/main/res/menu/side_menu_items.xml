@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/my_organization_text_menu"
+            android:id="@+id/my_organization_side_menu"
             android:icon="@drawable/domain"
             android:title="@string/my_organization" />
         <item
-            android:id="@+id/my_schedule_text_menu"
+            android:id="@+id/my_schedule_side_menu"
             android:icon="@drawable/calendar"
             android:title="@string/my_schedule" />
         <item
-            android:id="@+id/my_appointment_text_menu"
+            android:id="@+id/my_appointment_side_menu"
             android:icon="@drawable/account_supervisor"
             android:title="@string/my_appointment" />
 
         <item android:title="@string/profile">
             <menu>
                 <item
-                    android:id="@+id/nav_share"
+                    android:id="@+id/logout_of_account_side_menu"
                     android:icon="@drawable/logout"
                     android:title="@string/logout" />
             </menu>

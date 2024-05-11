@@ -49,7 +49,7 @@ public class AuthActivity extends AppCompatActivity {
         buttonSignIn = findViewById(R.id.buttonSignIn);
         buttonRegister = findViewById(R.id.buttonRegister);
 
-        root = findViewById(R.id.root_element_main);
+        root = findViewById(R.id.activity_auth);
 
         buttonSignIn.setOnClickListener(view -> showSignInWindows());
 

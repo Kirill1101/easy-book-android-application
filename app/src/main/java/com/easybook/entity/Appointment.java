@@ -1,5 +1,6 @@
 package com.easybook.entity;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
@@ -9,6 +10,8 @@ public class Appointment {
 
   private String userLogin;
 
+  private LocalDate date;
+
   private LocalTime startTime;
 
   private LocalTime endTime;
@@ -16,6 +19,8 @@ public class Appointment {
   private List<Service> services;
 
   private Long duration;
+
+  private String scheduleTitle;
 
   public UUID getId() {
     return id;
@@ -32,6 +37,15 @@ public class Appointment {
   public void setUserLogin(String userLogin) {
     this.userLogin = userLogin;
   }
+
+  public LocalDate getDate() {
+    return date;
+  }
+
+  public void setDate(LocalDate date) {
+    this.date = date;
+  }
+
 
   public LocalTime getStartTime() {
     return startTime;
@@ -63,5 +77,13 @@ public class Appointment {
 
   public void setDuration(Long duration) {
     this.duration = duration;
+  }
+
+  public String getScheduleTitle() {
+    return scheduleTitle;
+  }
+
+  public void setScheduleTitle(String scheduleTitle) {
+    this.scheduleTitle = scheduleTitle;
   }
 }

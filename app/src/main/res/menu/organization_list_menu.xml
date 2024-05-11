@@ -8,7 +8,7 @@
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/organization_list_menu_create"
+                android:id="@+id/organization_list_menu_create_organization"
                 android:title="Создать организацию" />
         </menu>
     </item>

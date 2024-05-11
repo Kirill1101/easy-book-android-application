@@ -13,11 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.easybook.R;
 import com.easybook.entity.Appointment;
-import com.easybook.entity.Organization;
 import com.easybook.fragment.AppointmentFragment;
-import com.easybook.fragment.OrganizationFragment;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -73,9 +69,9 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
         ViewHolder(View view) {
             super(view);
-            title = view.findViewById(R.id.application_item_schedule_title);
-            date = view.findViewById(R.id.application_item_date);
-            time = view.findViewById(R.id.application_item_time);
+            title = view.findViewById(R.id.appointment_item_schedule_title);
+            date = view.findViewById(R.id.appointment_item_date);
+            time = view.findViewById(R.id.appointment_item_time);
         }
     }
 }

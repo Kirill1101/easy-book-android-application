@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardElevation="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/text_share_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ID организации"
+            android:enabled="false"
+            android:inputType="text"
+            android:text=""
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"
+            app:met_floatingLabel="highlight"
+            app:met_baseColor="#0056d3"
+            app:met_primaryColor="#982360"
+            app:met_errorColor="#ddaa00"
+            app:met_singleLineEllipsis="true" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

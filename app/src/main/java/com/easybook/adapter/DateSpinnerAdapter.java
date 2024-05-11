@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.easybook.entity.ScheduleDate;
-import com.easybook.entity.Slot;
 
 import java.util.List;
 

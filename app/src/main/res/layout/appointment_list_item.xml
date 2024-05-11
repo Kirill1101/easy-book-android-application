@@ -6,21 +6,21 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/application_item_schedule_title"
+        android:id="@+id/appointment_item_schedule_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Расписание: <Такое то такое-то>"
+        android:text="Расписание: Такое то такое-то"
         android:textSize="20dp"
         android:textColor="@color/black"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="application_item_schedule_date"
+        app:layout_constraintBottom_toTopOf="@+id/appointment_item_date"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:fontFamily="@font/montserrat"/>
 
     <TextView
-        android:id="@+id/application_item_date"
+        android:id="@+id/appointment_item_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Дата: 24-12-2024"
@@ -29,12 +29,12 @@
 
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/application_item_time"
-        app:layout_constraintTop_toBottomOf="@+id/application_item_schedule_title"
+        app:layout_constraintBottom_toTopOf="@+id/appointment_item_time"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_item_schedule_title"
         app:fontFamily="@font/montserrat"/>
 
     <TextView
-        android:id="@+id/application_item_time"
+        android:id="@+id/appointment_item_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Время: 15:30-16:30"
@@ -43,7 +43,7 @@
 
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/application_item_date"
+        app:layout_constraintTop_toBottomOf="@+id/appointment_item_date"
         app:fontFamily="@font/montserrat"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
