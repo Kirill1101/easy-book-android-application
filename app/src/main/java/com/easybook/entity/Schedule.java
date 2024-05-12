@@ -18,6 +18,8 @@ public class Schedule {
 
   private List<Appointment> appointments;
 
+  private UUID organizationId;
+
   public UUID getId() {
     return id;
   }
@@ -72,5 +74,13 @@ public class Schedule {
 
   public void setAppointments(List<Appointment> appointments) {
     this.appointments = appointments;
+  }
+
+  public UUID getOrganizationId() {
+    return organizationId;
+  }
+
+  public void setOrganizationId(UUID organizationId) {
+    this.organizationId = organizationId;
   }
 }

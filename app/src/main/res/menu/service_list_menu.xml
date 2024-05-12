@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/appointment_list_menu"
+        android:id="@+id/service_list_menu"
         android:icon="@drawable/baseline_more_vert_24"
         android:title=""
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/appointment_list_menu_create_appointment"
-                android:title="Создать запись" />
+                android:id="@+id/service_list_menu_create_service"
+                android:title="Создать услугу" />
         </menu>
     </item>
 </menu>

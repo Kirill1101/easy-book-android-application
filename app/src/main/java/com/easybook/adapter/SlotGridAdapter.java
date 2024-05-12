@@ -3,6 +3,7 @@ package com.easybook.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.easybook.R;
 import com.easybook.entity.Appointment;
 import com.easybook.entity.Slot;
 
@@ -52,7 +54,10 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
             convertView = new TextView(context);
             label = (TextView) convertView;
         }
+        label.setBackgroundResource(R.drawable.rounded_square_shape);
         label.setTextSize(20);
+        label.setPadding(5,5,5,5);
+        label.setGravity(Gravity.CENTER);
         label.setText(slots.get(position).getStartTime().toString());
 
         Slot slot = slots.get(position);

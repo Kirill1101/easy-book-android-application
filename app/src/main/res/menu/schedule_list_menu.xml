@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/schedule_list_menu"
+        android:icon="@drawable/baseline_more_vert_24"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/schedule_list_menu_create_schedule"
+                android:title="Создать расписание" />
+        </menu>
+    </item>
 </menu>

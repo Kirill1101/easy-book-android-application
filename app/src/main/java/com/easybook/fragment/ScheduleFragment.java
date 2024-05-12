@@ -1,38 +1,36 @@
 package com.easybook.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.easybook.R;
 import com.easybook.adapter.DateSpinnerAdapter;
 import com.easybook.adapter.SlotGridAdapter;
-import com.easybook.entity.Appointment;
 import com.easybook.entity.Schedule;
 import com.easybook.entity.ScheduleDate;
 import com.easybook.entity.Slot;
 import com.easybook.util.RequestUtil;
-
-import org.w3c.dom.ls.LSOutput;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -41,6 +39,8 @@ import okhttp3.Response;
 
 public class ScheduleFragment extends Fragment {
 
+    Schedule schedule;
+
     public ScheduleFragment() {
         super(R.layout.schedule);
     }
@@ -48,13 +48,14 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.organization_menu, menu);
+        inflater.inflate(R.menu.schedule_menu, menu);
         super.onCreateOptionsMenu(menu,inflater);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
         Activity activity = this.getActivity();
 
         String token = activity.
@@ -82,9 +83,9 @@ public class ScheduleFragment extends Fragment {
                         RequestUtil.makeSnackBar(activity, view, response.message());
                     }
 
-                    TextView scheduleTitle = view.findViewById(R.id.text_schedule_title);
+                    TextView scheduleTitle = view.findViewById(R.id.schedule_title);
                     String respStr = response.body().string();
-                    Schedule schedule = RequestUtil.OBJECT_MAPPER.readValue(respStr, Schedule.class);
+                    schedule = RequestUtil.OBJECT_MAPPER.readValue(respStr, Schedule.class);
                     GridView gridView = view.findViewById(R.id.gridview_slots);
                     Spinner dateSpinner = view.findViewById(R.id.date_spinner);
                     dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -122,5 +123,50 @@ public class ScheduleFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.schedule_menu_service_editor: {
+                ServiceListFragment serviceListFragment = new ServiceListFragment();
+                Bundle arguments = new Bundle();
+                arguments.putString("scheduleId", schedule.getId().toString());
+                serviceListFragment.setArguments(arguments);
+                getActivity().runOnUiThread(() -> {
+                    getParentFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                            serviceListFragment, "SERVICE_LIST").commit();
+                });
+                break;
+            }
+            case R.id.schedule_menu_edit_schedule:
+                break;
+            case R.id.schedule_menu_share:
+                dialogShare();
+                break;
+        }
+        return false;
+    }
+
+    private void dialogShare() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setTitle("Идентификатор расписания");
+        dialog.setMessage("Поделитесь с теми, кому хотите дать доступ для записи");
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View shareIdWindow = inflater.inflate(R.layout.share_id_window, null);
+        dialog.setView(shareIdWindow);
+        final MaterialEditText scheduleId = shareIdWindow.findViewById(R.id.text_share_id);
+        scheduleId.setText(schedule.getId().toString());
+
+        dialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
+
+        dialog.setPositiveButton("Копировать", (dialogInterface, i) -> {
+            ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("", schedule.getId().toString());
+            clipboard.setPrimaryClip(clip);
+        });
+
+        dialog.show();
     }
 }

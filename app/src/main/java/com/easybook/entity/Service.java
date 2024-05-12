@@ -11,6 +11,10 @@ public class Service {
 
   private Long duration;
 
+  private Integer price;
+
+  private UUID scheduleId;
+
   public UUID getId() {
     return id;
   }
@@ -41,5 +45,21 @@ public class Service {
 
   public void setDuration(Long duration) {
     this.duration = duration;
+  }
+
+  public Integer getPrice() {
+    return price;
+  }
+
+  public void setPrice(Integer price) {
+    this.price = price;
+  }
+
+  public UUID getScheduleId() {
+    return scheduleId;
+  }
+
+  public void setScheduleId(UUID scheduleId) {
+    this.scheduleId = scheduleId;
   }
 }

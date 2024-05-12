@@ -34,7 +34,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     @NonNull
     @Override
     public AppointmentAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.organization_list_item, parent, false);
+        View view = inflater.inflate(R.layout.appointment_list_item, parent, false);
         return new AppointmentAdapter.ViewHolder(view);
     }
 
@@ -42,11 +42,10 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
     public void onBindViewHolder(@NonNull AppointmentAdapter.ViewHolder holder, int position) {
         Appointment appointment = appointments.get(position);
         String timeStr = appointment.getStartTime().toString()
-                + appointment.getEndTime().toString();
+                + " - " + appointment.getEndTime().toString();
 
-        //TODO Установить нормальные поля в текстовые поля
-        holder.title.setText("Какое-то расписание");
-        holder.date.setText("Какая-то дата");
+        holder.title.setText(appointment.getScheduleTitle());
+        holder.date.setText(appointment.getDate().toString());
         holder.time.setText(timeStr);
 
         holder.itemView.setOnClickListener((view) -> {

@@ -13,6 +13,9 @@
             <item
                 android:id="@+id/organization_menu_share"
                 android:title="Поделиться" />
+            <item
+                android:id="@+id/organization_menu_create_schedule"
+                android:title="Создать расписание" />
         </menu>
     </item>
 </menu>

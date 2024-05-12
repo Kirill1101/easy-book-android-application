@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,22 +15,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.easybook.R;
 import com.easybook.adapter.OrganizationAdapter;
 import com.easybook.entity.Organization;
-import com.easybook.entity.UserCredential;
 import com.easybook.util.RequestUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.android.material.snackbar.Snackbar;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -39,10 +38,12 @@ import okhttp3.Response;
 
 public class OrganizationListFragment extends Fragment {
     public OrganizationListFragment() {
-        super(R.layout.organization_list);
+        super(R.layout.list);
     }
 
     private String token;
+
+    private OrganizationAdapter organizationAdapter;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -78,17 +79,20 @@ public class OrganizationListFragment extends Fragment {
                     RequestUtil.makeSnackBar(activity, view, response.message());
                 }
                 try {
-                    RecyclerView recyclerView = view.findViewById(R.id.organization_list);
+                    RecyclerView recyclerView = view.findViewById(R.id.list);
                     String respStr = response.body().string();
                     List<Organization> organizations =
                             RequestUtil.OBJECT_MAPPER.readValue(respStr,
                                     new TypeReference<List<Organization>>() {});
-                    OrganizationAdapter organizationAdapter = new OrganizationAdapter(view.getContext(),
+                    organizationAdapter = new OrganizationAdapter(view.getContext(),
                             organizations,
                             getParentFragmentManager());
                     activity.runOnUiThread(() -> {
-                        //recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
-                        //        DividerItemDecoration.VERTICAL));
+                        if (organizations.size() == 0) {
+                            view.findViewById(R.id.not_existing_message)
+                                    .setVisibility(View.VISIBLE);
+                        }
+                        registerForContextMenu(recyclerView);
                         recyclerView.setAdapter(organizationAdapter);
                     });
                 } catch (Exception e) {
@@ -136,6 +140,29 @@ public class OrganizationListFragment extends Fragment {
         return false;
     }
 
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v,
+                                    @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(Menu.NONE, 1, Menu.NONE, "Удалить");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                dialog.setTitle("Вы уверены что хотите удалить организацию?");
+                dialog.setNegativeButton("Нет", (dialogInterface, i) -> dialogInterface.dismiss());
+                dialog.setPositiveButton("Да", (dialogInterface, i) -> {
+                    UUID id = organizationAdapter.deleteOrganization();
+                    deleteOrganization(id);
+                });
+                dialog.show();
+        }
+        return super.onContextItemSelected(item);
+    }
+
     private void createOrganization(Organization organization) throws JsonProcessingException{
         RequestBody body = RequestBody.create(
                 RequestUtil.OBJECT_MAPPER.writeValueAsString(organization), RequestUtil.MEDIA_TYPE);
@@ -157,6 +184,31 @@ public class OrganizationListFragment extends Fragment {
                 }
                 getParentFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
                         OrganizationListFragment.class, null).commit();
+            }
+        });
+    }
+
+    private void deleteOrganization(UUID id) {
+        Request request = new Request.Builder()
+                .url(RequestUtil.BASE_ORGANIZATION_URL + "/" + id)
+                .delete()
+                .header("Authorization", token)
+                .build();
+        RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                RequestUtil.makeSnackBar(getActivity(), getView(), e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (!response.isSuccessful()) {
+                    RequestUtil.makeSnackBar(getActivity(), getView(), response.message());
+                }
+                getActivity().runOnUiThread(() -> {
+                    getParentFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                            OrganizationListFragment.class, null).commit();
+                });
             }
         });
     }

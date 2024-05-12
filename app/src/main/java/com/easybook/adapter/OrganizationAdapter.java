@@ -2,9 +2,12 @@ package com.easybook.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,8 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.easybook.R;
 import com.easybook.entity.Organization;
 import com.easybook.fragment.OrganizationFragment;
+import com.easybook.util.RequestUtil;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.UUID;
 
 public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapter.ViewHolder> {
     private final LayoutInflater inflater;
@@ -23,6 +29,8 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     private final List<Organization> organizations;
 
     private final FragmentManager fragmentManager;
+
+    private int contextPosition;
 
     public OrganizationAdapter(Context context, List<Organization> organizations,
                                FragmentManager fragmentManager) {
@@ -50,11 +58,22 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
             fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
                     organizationFragment, "ORGANIZATION").commit();
         });
+
+        holder.itemView.setOnLongClickListener((view) -> {
+            contextPosition = position;
+            return false;
+        });
     }
 
     @Override
     public int getItemCount() {
         return organizations.size();
+    }
+
+    public UUID deleteOrganization() {
+        UUID id = organizations.get(contextPosition).getId();
+        organizations.remove(contextPosition);
+        return id;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

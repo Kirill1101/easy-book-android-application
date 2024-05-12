@@ -18,11 +18,13 @@ import com.easybook.fragment.OrganizationFragment;
 import com.easybook.fragment.ScheduleFragment;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>{
     private final LayoutInflater inflater;
     private final List<Schedule> schedules;
     private final FragmentManager fragmentManager;
+    private int contextPosition;
 
     public ScheduleAdapter(Context context, List<Schedule> schedules,
                                FragmentManager fragmentManager) {
@@ -50,6 +52,17 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
                     scheduleFragment, "SCHEDULE").commit();
         });
+
+        holder.itemView.setOnLongClickListener((view) -> {
+            contextPosition = position;
+            return false;
+        });
+    }
+
+    public UUID deleteSchedule() {
+        UUID id = schedules.get(contextPosition).getId();
+        schedules.remove(contextPosition);
+        return id;
     }
 
     @Override

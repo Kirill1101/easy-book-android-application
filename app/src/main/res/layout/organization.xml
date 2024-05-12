@@ -13,7 +13,8 @@
         app:cardElevation="6dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
+
         <TextView
             android:id="@+id/organization_title"
             android:layout_width="match_parent"
@@ -29,25 +30,52 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/organization_card_view_list_of_schedules"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:elevation="8dp"
+        app:cardElevation="6dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/organization_card_view_title">
+
+        <TextView
+            android:id="@+id/organization_list_of_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="Список расписаний:"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/layout_with_schedules"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/organization_card_view_schedules" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/organization_card_view_schedules"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:elevation="8dp"
         app:cardElevation="6dp"
-        app:layout_constraintTop_toBottomOf="@+id/organization_card_view_title"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/organization_card_view_list_of_schedules">
 
         <LinearLayout
             android:id="@+id/layout_with_schedules"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="@+id/text_list_of_schedules">
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/organization_list_of_schedule">
 
-            <include layout="@layout/schedule_list" />
+            <include layout="@layout/list" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

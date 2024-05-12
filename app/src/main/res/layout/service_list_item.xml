@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="20dp"
-            android:src="@drawable/account_supervisor" />
+            android:src="@drawable/help_box_outline" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,28 +24,28 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/appointment_item_schedule_title"
+                android:id="@+id/service_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Расписание: Такое то такое-то"
+                android:text="Название услуги"
                 android:textColor="@color/black"
                 android:fontFamily="@font/montserrat"
                 android:textSize="18dp" />
 
             <TextView
-                android:id="@+id/appointment_item_date"
+                android:id="@+id/service_item_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Дата: 24-12-2024"
+                android:text="Длительность"
                 android:textColor="@color/black"
                 android:fontFamily="@font/montserrat"
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/appointment_item_time"
+                android:id="@+id/service_item_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Время: 15:30-16:30"
+                android:text="Стоимость"
                 android:textColor="@color/black"
                 android:textSize="14dp"
                 android:fontFamily="@font/montserrat"/>

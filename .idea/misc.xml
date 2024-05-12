@@ -3,39 +3,64 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/apps_box.xml" value="0.16153846153846155" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/baseline_more_vert_24.xml" value="0.26614583333333336" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/button.xml" value="0.22962962962962963" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/calendar.xml" value="0.22962962962962963" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/calendar_range.xml" value="0.22962962962962963" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/clock.xml" value="0.23385416666666667" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/clock_time_eight_outline.xml" value="0.22962962962962963" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/color_state_toggle_rich_edit_text.xml" value="0.26614583333333336" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/help_box_outline.xml" value="0.16153846153846155" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1638888888888889" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/rounded_square_shape.xml" value="0.15" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/square_outline.xml" value="0.16153846153846155" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/timer_off_outline.xml" value="0.2171875" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/view_week_outline.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout-w1240dp/activity_auth.xml" value="0.1606425702811245" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout-w1240dp/activity_login.xml" value="0.1606425702811245" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout-w1240dp/service_list_item.xml" value="0.264" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout-w936dp/activity_login.xml" value="0.1875" />
-        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/activity_auth.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/activity_auth.xml" value="0.1" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/activity_home.xml" value="0.15260416666666668" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/appointment.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/appointment_list.xml" value="0.190625" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/appointment_list_item.xml" value="0.264" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/confirmation_logout.xml" value="0.1828125" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/create_appointment.xml" value="0.14914529914529914" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/create_organization.xml" value="0.14375" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/create_schedule.xml" value="0.264" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/create_service.xml" value="0.264" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/dsad.xml" value="0.13205128205128205" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/list.xml" value="0.176" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/list_item.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/organization.xml" value="0.2" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/organization_list.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/organization_list_item.xml" value="0.2" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/schedule.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/schedule_list.xml" value="0.190625" />
-        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/schedule_list_item.xml" value="0.14427083333333332" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/schedule_list_item.xml" value="0.152" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/schedule_new.xml" value="0.264" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/service_list.xml" value="0.1703125" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/service_list_item.xml" value="0.2" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/share_id_window.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/side_menu.xml" value="0.1" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/side_menu_header.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/sign_in.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/sign_up.xml" value="0.1890625" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/toolbar.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layouts/organization/layout/create_organization.xml" value="0.1" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layouts/organization/layout/share_id_window.xml" value="0.4" />
-        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/appointment_list_menu.xml" value="0.25" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/appointment_list_menu.xml" value="0.1" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/appointment_menu.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/organization_list_menu.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/organization_menu.xml" value="0.25" />
-        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/schedule_list_menu.xml" value="0.25" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/schedule_list_menu.xml" value="0.1" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/schedule_menu.xml" value="0.25" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/service_list_menu.xml" value="0.152991452991453" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/menu/side_menu_items.xml" value="0.1828125" />
+        <entry key="..\:/Users/kiril/AppData/Local/Android/Sdk/platforms/android-33/data/res/layout/select_dialog_singlechoice.xml" value="0.25" />
         <entry key="..\:/Users/kiril/AppData/Local/Android/Sdk/platforms/android-33/data/res/layout/simple_list_item_1.xml" value="0.13854166666666667" />
         <entry key="..\:/Users/kiril/AppData/Local/Android/Sdk/platforms/android-33/data/res/layout/test_list_item.xml" value="0.234375" />
       </map>

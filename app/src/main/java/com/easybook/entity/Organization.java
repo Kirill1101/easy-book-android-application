@@ -12,6 +12,8 @@ public class Organization {
 
   private List<Schedule> schedules;
 
+  private List<String> userAdminLogins;
+
   public UUID getId() {
     return id;
   }
@@ -42,5 +44,13 @@ public class Organization {
 
   public void setSchedules(List<Schedule> schedules) {
     this.schedules = schedules;
+  }
+
+  public List<String> getUserAdminLogins() {
+    return userAdminLogins;
+  }
+
+  public void setUserAdminLogins(List<String> userAdminLogins) {
+    this.userAdminLogins = userAdminLogins;
   }
 }
