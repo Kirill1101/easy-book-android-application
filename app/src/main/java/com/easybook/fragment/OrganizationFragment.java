@@ -44,7 +44,7 @@ public class OrganizationFragment extends Fragment {
 
     private ScheduleAdapter scheduleAdapter;
 
-    private String token;
+    private String token, login;
 
     private ScheduleRequestUtil scheduleRequestUtil;
 
@@ -62,13 +62,13 @@ public class OrganizationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setHasOptionsMenu(true);
 
         Activity activity = this.getActivity();
 
         token = activity.
                 getSharedPreferences("auth", Context.MODE_PRIVATE).getString("token", "");
-
+        login = activity.
+                getSharedPreferences("auth", Context.MODE_PRIVATE).getString("login", "");
         scheduleRequestUtil = new ScheduleRequestUtil(token, getActivity(),
                 getContext(), getView(), getParentFragmentManager());
 
@@ -100,8 +100,17 @@ public class OrganizationFragment extends Fragment {
                             organization.getSchedules(),
                             getParentFragmentManager());
                     activity.runOnUiThread(() -> {
+                        if (organization.getUserCreatorLogin().equals(login)
+                                || organization.getUserAdminLogins().contains(login)) {
+                            setHasOptionsMenu(true);
+                            registerForContextMenu(recyclerView);
+                        }
+
+                        if (organization.getSchedules().size() == 0) {
+                            view.findViewById(R.id.not_existing_message)
+                                    .setVisibility(View.VISIBLE);
+                        }
                         String title = "Организация: " + organization.getTitle();
-                        registerForContextMenu(recyclerView);
                         organizationTitle.setText(title);
                         recyclerView.setAdapter(scheduleAdapter);
                     });
