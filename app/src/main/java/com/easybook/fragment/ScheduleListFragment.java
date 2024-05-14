@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -80,9 +81,6 @@ public class ScheduleListFragment extends Fragment {
                     RequestUtil.makeSnackBar(activity, view, response.message());
                 }
                 try {
-                    if (!response.isSuccessful()) {
-                        RequestUtil.makeSnackBar(activity, view, response.message());
-                    }
                     RecyclerView recyclerView = view.findViewById(R.id.list);
                     String respStr = response.body().string();
                     List<Schedule> schedules =
@@ -94,8 +92,9 @@ public class ScheduleListFragment extends Fragment {
                             getParentFragmentManager());
                     activity.runOnUiThread(() -> {
                         if (schedules.size() == 0) {
-                            view.findViewById(R.id.not_existing_message)
-                                    .setVisibility(View.VISIBLE);
+                            TextView notExistingView = view.findViewById(R.id.not_existing_message);
+                            notExistingView.setText("У вас пока нет расписаний");
+                            notExistingView.setVisibility(View.VISIBLE);
                         }
                         registerForContextMenu(recyclerView);
                         recyclerView.setAdapter(scheduleAdapter);

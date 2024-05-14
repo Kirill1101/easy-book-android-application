@@ -1,14 +1,14 @@
 package com.easybook.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,17 +20,24 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.easybook.R;
-import com.easybook.entity.UserCredential;
+import com.easybook.entity.Appointment;
+import com.easybook.entity.Schedule;
 import com.easybook.fragment.AppointmentListFragment;
 import com.easybook.fragment.OrganizationListFragment;
+import com.easybook.fragment.ScheduleFragment;
 import com.easybook.fragment.ScheduleListFragment;
 import com.easybook.util.RequestUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.util.Objects;
+import java.io.IOException;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -44,7 +51,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
 
         Thread refreshTokenThread = new Thread(() -> {
-            while(true) {
+            while (true) {
                 try {
                     RequestUtil.refreshToken(getSharedPreferences("auth", MODE_PRIVATE));
                     Thread.sleep(60000);
@@ -69,6 +76,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        checkUserSchedules();
     }
 
     @Override
@@ -110,5 +119,87 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(HomeActivity.this, AuthActivity.class));
         });
         dialog.show();
+    }
+
+    private void checkUserSchedules() {
+        String token = getSharedPreferences("auth", Context.MODE_PRIVATE).getString("token", "");
+
+        Request request = new Request.Builder()
+                .url(RequestUtil.BASE_SCHEDULE_URL)
+                .header("Authorization", token)
+                .build();
+
+        RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                try {
+                    String respStr = response.body().string();
+                    List<Schedule> schedules =
+                            RequestUtil.OBJECT_MAPPER.readValue(respStr,
+                                    new TypeReference<List<Schedule>>() {
+                                    });
+                    runOnUiThread(() -> {
+                        if (schedules.size() > 1) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container_view, ScheduleListFragment.class, null).commit();
+                        } else if (schedules.size() == 1) {
+                            ScheduleFragment scheduleFragment = new ScheduleFragment();
+                            Bundle arguments = new Bundle();
+                            arguments.putString("id", schedules.get(0).getId().toString());
+                            scheduleFragment.setArguments(arguments);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                                    scheduleFragment, "SCHEDULE").commit();
+                        } else {
+                            checkUserAppointment();
+                        }
+                    });
+                } catch (Exception e) {
+                }
+            }
+        });
+    }
+
+    private void checkUserAppointment() {
+        String token = getSharedPreferences("auth", Context.MODE_PRIVATE).getString("token", "");
+
+        Request request = new Request.Builder()
+                .url(RequestUtil.BASE_APPOINTMENT_URL)
+                .header("Authorization", token)
+                .build();
+
+        RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                try {
+                    String respStr = response.body().string();
+                    List<Appointment> appointments =
+                            RequestUtil.OBJECT_MAPPER.readValue(respStr,
+                                    new TypeReference<List<Appointment>>() {
+                                    });
+                    runOnUiThread(() -> {
+                        if (appointments.size() > 0) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container_view, AppointmentListFragment.class, null).commit();
+                        } else {
+                            AppointmentListFragment appointmentListFragment = new AppointmentListFragment();
+                            Bundle arguments = new Bundle();
+                            arguments.putString("message", "Начните взаимодействовать с приложением через боковое меню");
+                            appointmentListFragment.setArguments(arguments);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                                    appointmentListFragment, "SCHEDULE").commit();
+                        }
+                    });
+                } catch (Exception e) {
+                }
+            }
+        });
     }
 }

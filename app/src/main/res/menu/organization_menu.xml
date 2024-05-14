@@ -11,11 +11,11 @@
                 android:id="@+id/organization_menu_edit"
                 android:title="Редактировать" />
             <item
-                android:id="@+id/organization_menu_share"
-                android:title="Поделиться" />
-            <item
                 android:id="@+id/organization_menu_create_schedule"
                 android:title="Создать расписание" />
+            <item
+                android:id="@+id/organization_menu_share"
+                android:title="Поделиться" />
         </menu>
     </item>
 </menu>

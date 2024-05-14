@@ -1,15 +1,11 @@
 package com.easybook.util;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import com.easybook.activity.AuthActivity;
-import com.easybook.activity.HomeActivity;
 import com.easybook.entity.UserCredential;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +13,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -75,6 +70,8 @@ public class RequestUtil {
     }
 
     public static void makeSnackBar(Activity activity, View view, String message) {
-        activity.runOnUiThread(() -> Snackbar.make(view, message, Snackbar.LENGTH_LONG).show());
+        if (activity != null && view != null) {
+            activity.runOnUiThread(() -> Snackbar.make(view, message, Snackbar.LENGTH_LONG).show());
+        }
     }
 }

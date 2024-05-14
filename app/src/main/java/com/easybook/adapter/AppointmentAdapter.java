@@ -1,7 +1,7 @@
 package com.easybook.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.easybook.R;
 import com.easybook.entity.Appointment;
-import com.easybook.fragment.AppointmentFragment;
+import com.easybook.util.Util;
 
 import java.util.List;
+import java.util.UUID;
 
 public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.ViewHolder> {
     private final LayoutInflater inflater;
@@ -24,8 +25,13 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
     private final FragmentManager fragmentManager;
 
+    private final Context context;
+
+    private int contextPosition;
+
     public AppointmentAdapter(Context context, List<Appointment> appointments,
-                               FragmentManager fragmentManager) {
+                              FragmentManager fragmentManager) {
+        this.context = context;
         this.appointments = appointments;
         this.inflater = LayoutInflater.from(context);
         this.fragmentManager = fragmentManager;
@@ -49,18 +55,26 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         holder.time.setText(timeStr);
 
         holder.itemView.setOnClickListener((view) -> {
-            AppointmentFragment organizationFragment = new AppointmentFragment();
-            Bundle arguments = new Bundle();
-            arguments.putString("id", appointment.getId().toString());
-            organizationFragment.setArguments(arguments);
-            fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
-                    organizationFragment, "APPOINTMENT").commit();
+            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+            dialog.setMessage(Util.getAppointmentStringByAppointment(appointment));
+            dialog.show();
+        });
+
+        holder.itemView.setOnLongClickListener((view) -> {
+            contextPosition = position;
+            return false;
         });
     }
 
     @Override
     public int getItemCount() {
         return appointments.size();
+    }
+
+    public UUID deleteAppointment() {
+        UUID id = appointments.get(contextPosition).getId();
+        appointments.remove(contextPosition);
+        return id;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -107,8 +108,9 @@ public class OrganizationFragment extends Fragment {
                         }
 
                         if (organization.getSchedules().size() == 0) {
-                            view.findViewById(R.id.not_existing_message)
-                                    .setVisibility(View.VISIBLE);
+                            TextView notExistingView = view.findViewById(R.id.not_existing_message);
+                            notExistingView.setText("В этой организации пока нет расписаний");
+                            notExistingView.setVisibility(View.VISIBLE);
                         }
                         String title = "Организация: " + organization.getTitle();
                         organizationTitle.setText(title);
@@ -202,7 +204,9 @@ public class OrganizationFragment extends Fragment {
         dialog.setView(editOrganizationWindow);
 
         final MaterialEditText title = editOrganizationWindow.findViewById(R.id.field_create_organization);
+        final MaterialEditText listOfAdmins = editOrganizationWindow.findViewById(R.id.field_list_of_admins);
         title.setText(organization.getTitle());
+        listOfAdmins.setText(String.join(" ", organization.getUserAdminLogins()));
 
         dialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
 
@@ -213,6 +217,7 @@ public class OrganizationFragment extends Fragment {
             }
 
             organization.setTitle(title.getText().toString());
+            organization.setUserAdminLogins(Arrays.asList(listOfAdmins.getText().toString().split(" ")));
 
             try {
                 updateOrganization(organization);

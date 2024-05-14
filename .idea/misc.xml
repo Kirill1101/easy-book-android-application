@@ -14,6 +14,7 @@
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/help_box_outline.xml" value="0.16153846153846155" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1638888888888889" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/rounded_square_shape.xml" value="0.15" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/rounded_square_shape_occupied.xml" value="0.17478632478632478" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/square_outline.xml" value="0.16153846153846155" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/timer_off_outline.xml" value="0.2171875" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/drawable/view_week_outline.xml" value="0.17395833333333333" />
@@ -29,9 +30,10 @@
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/appointment_list_item.xml" value="0.264" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/confirmation_logout.xml" value="0.1828125" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/create_appointment.xml" value="0.14914529914529914" />
-        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/create_organization.xml" value="0.14375" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/create_organization.xml" value="0.264" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/create_schedule.xml" value="0.264" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/create_service.xml" value="0.264" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/custom_multi_choice_item.xml" value="0.1452991452991453" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/dsad.xml" value="0.13205128205128205" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/list.xml" value="0.176" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/list_item.xml" value="0.25" />
@@ -45,7 +47,7 @@
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/service_list.xml" value="0.1703125" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/service_list_item.xml" value="0.2" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/share_id_window.xml" value="0.20104166666666667" />
-        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/side_menu.xml" value="0.1" />
+        <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/side_menu.xml" value="0.16" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/side_menu_header.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/sign_in.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/kiril/AndroidStudioProjects/easy-book-android-application/app/src/main/res/layout/sign_up.xml" value="0.1890625" />

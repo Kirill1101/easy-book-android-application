@@ -27,5 +27,19 @@
             app:met_errorColor="#ddaa00"
             app:met_singleLineEllipsis="true" />
 
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/field_list_of_admins"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Логины администраторов (через пробел)"
+            android:inputType="text"
+            android:text=""
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey"
+            app:met_floatingLabel="highlight"
+            app:met_baseColor="#0056d3"
+            app:met_primaryColor="#982360"
+            app:met_errorColor="#ddaa00"
+            app:met_singleLineEllipsis="true" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

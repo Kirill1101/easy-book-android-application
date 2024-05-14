@@ -14,6 +14,12 @@
                 android:id="@+id/schedule_menu_service_editor"
                 android:title="Список услуг" />
             <item
+                android:id="@+id/schedule_menu_add_dates"
+                android:title="Добавить даты" />
+            <item
+                android:id="@+id/schedule_menu_add_slots"
+                android:title="Добавить слоты" />
+            <item
                 android:id="@+id/schedule_menu_share"
                 android:title="Поделиться" />
         </menu>

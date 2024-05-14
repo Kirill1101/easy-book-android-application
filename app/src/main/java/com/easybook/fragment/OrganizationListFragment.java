@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -89,8 +91,9 @@ public class OrganizationListFragment extends Fragment {
                             getParentFragmentManager());
                     activity.runOnUiThread(() -> {
                         if (organizations.size() == 0) {
-                            view.findViewById(R.id.not_existing_message)
-                                    .setVisibility(View.VISIBLE);
+                            TextView notExistingView = view.findViewById(R.id.not_existing_message);
+                            notExistingView.setText("У вас пока нет организаций");
+                            notExistingView.setVisibility(View.VISIBLE);
                         }
                         registerForContextMenu(recyclerView);
                         recyclerView.setAdapter(organizationAdapter);
@@ -115,6 +118,7 @@ public class OrganizationListFragment extends Fragment {
                 dialog.setView(createOrganizationWindow);
 
                 final MaterialEditText title = createOrganizationWindow.findViewById(R.id.field_create_organization);
+                final MaterialEditText listOfAdmins = createOrganizationWindow.findViewById(R.id.field_list_of_admins);
 
                 dialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
 
@@ -126,6 +130,7 @@ public class OrganizationListFragment extends Fragment {
 
                     Organization organization = new Organization();
                     organization.setTitle(title.getText().toString());
+                    organization.setUserAdminLogins(Arrays.asList(listOfAdmins.getText().toString().split(" ")));
 
                     try {
                         createOrganization(organization);
@@ -178,7 +183,7 @@ public class OrganizationListFragment extends Fragment {
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 if (!response.isSuccessful()) {
                     RequestUtil.makeSnackBar(getActivity(), getView(), response.message());
                 }

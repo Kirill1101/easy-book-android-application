@@ -8,5 +8,4 @@
     android:theme="@android:style/Theme.NoDisplay" >
 
     <include layout="@layout/side_menu"/>
-
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -89,8 +90,9 @@ public class ServiceListFragment extends Fragment {
                             getParentFragmentManager());
                     activity.runOnUiThread(() -> {
                         if (services.size() == 0) {
-                            view.findViewById(R.id.not_existing_message)
-                                    .setVisibility(View.VISIBLE);
+                            TextView notExistingView = view.findViewById(R.id.not_existing_message);
+                            notExistingView.setText("В этом расписании пока нет услуг");
+                            notExistingView.setVisibility(View.VISIBLE);
                         }
                         recyclerView.setAdapter(serviceAdapter);
                         registerForContextMenu(recyclerView);

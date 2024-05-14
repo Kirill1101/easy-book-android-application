@@ -18,6 +18,7 @@ import com.easybook.entity.Schedule;
 import com.easybook.entity.ScheduleDate;
 import com.easybook.entity.Slot;
 import com.easybook.fragment.OrganizationFragment;
+import com.easybook.fragment.ScheduleFragment;
 import com.easybook.fragment.ScheduleListFragment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -56,6 +57,7 @@ public class ScheduleRequestUtil {
     private UUID organizationId;
     private LocalDate pickedStartDate, pickedEndDate;
     private LocalTime pickedStartTime, pickedEndTime;
+    private List<Integer> daysList;
 
     public ScheduleRequestUtil(String token, Activity activity, Context context, View view, FragmentManager fragmentManager) {
         this.token = token;
@@ -69,31 +71,94 @@ public class ScheduleRequestUtil {
         this.organizationId = organizationId;
     }
 
+    public void showAddDatesScheduleWindow(Schedule schedule) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setCancelable(false);
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View addDatesWindow = inflater.inflate(R.layout.create_schedule, null);
+        dialog.setView(addDatesWindow);
+
+        TextInputEditText checkboxFreeTimeText = addDatesWindow.findViewById(R.id.create_schedule_checkbox_free_time_text);
+
+        addDatesWindow.findViewById(R.id.create_schedule_schedule_title_layout).setVisibility(View.GONE);
+        addDatesWindow.findViewById(R.id.create_schedule_duration_layout).setVisibility(View.GONE);
+
+        setDateTimePickerToField(addDatesWindow);
+
+        dialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
+
+        dialog.setPositiveButton("Создать", (dialogInterface, i) -> {
+            if (pickedStartDate == null || pickedEndDate == null) {
+                RequestUtil.makeSnackBar(activity, view, "Выберите начало и конец рабочего дня");
+                return;
+            }
+            if (pickedStartDate.toEpochDay() >= pickedEndDate.toEpochDay()) {
+                RequestUtil.makeSnackBar(activity, view, "Начало рабочего времени не может быть позже чем его конец");
+                return;
+            }
+            addScheduleDatesToSchedule(schedule, daysList, checkboxFreeTimeText.getText().toString());
+        });
+        dialog.show();
+    }
+
     public void showCreateScheduleWindow() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setCancelable(false);
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View createOrganizationWindow = inflater.inflate(R.layout.create_schedule, null);
-        dialog.setView(createOrganizationWindow);
+        View createScheduleWindow = inflater.inflate(R.layout.create_schedule, null);
+        dialog.setView(createScheduleWindow);
 
-        TextInputEditText titleText = createOrganizationWindow.findViewById(R.id.create_schedule_schedule_title_text);
-        TextInputLayout dateRangeLayout = createOrganizationWindow.findViewById(R.id.create_schedule_date_range_layout);
-        TextInputEditText dateRangeText = createOrganizationWindow.findViewById(R.id.create_schedule_date_range_text);
-        TextInputLayout startTimeLayout = createOrganizationWindow.findViewById(R.id.create_schedule_time_start_layout);
-        TextInputEditText startTimeText = createOrganizationWindow.findViewById(R.id.create_schedule_time_start_text);
-        TextInputLayout endTimeLayout = createOrganizationWindow.findViewById(R.id.create_schedule_time_end_layout);
-        TextInputEditText endTimeText = createOrganizationWindow.findViewById(R.id.create_schedule_time_end_text);
-        TextInputLayout checkboxHolidayLayout = createOrganizationWindow.findViewById(R.id.create_schedule_checkbox_holiday_layout);
-        TextInputEditText checkboxHolidayText = createOrganizationWindow.findViewById(R.id.create_schedule_checkbox_holiday_text);
-        TextInputLayout checkboxFreeTimeLayout = createOrganizationWindow.findViewById(R.id.create_schedule_checkbox_free_time_layout);
-        TextInputEditText checkboxFreeTimeText = createOrganizationWindow.findViewById(R.id.create_schedule_checkbox_free_time_text);
-        AutoCompleteTextView durationAutoCompleteTextView = createOrganizationWindow.findViewById(R.id.create_schedule_duration_auto_complete);
+        TextInputEditText titleText = createScheduleWindow.findViewById(R.id.create_schedule_schedule_title_text);
+        TextInputEditText checkboxFreeTimeText = createScheduleWindow.findViewById(R.id.create_schedule_checkbox_free_time_text);
+        AutoCompleteTextView durationAutoCompleteTextView = createScheduleWindow.findViewById(R.id.create_schedule_duration_auto_complete);
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter(activity,
                 R.layout.list_item,
                 new String[]{"5м", "10м", "15м", "20м", "30м", "45м", "60м", "1ч 30м"});
         durationAutoCompleteTextView.setAdapter(adapter);
+
+        setDateTimePickerToField(createScheduleWindow);
+
+        dialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
+
+        dialog.setPositiveButton("Создать", (dialogInterface, i) -> {
+            if (titleText.getText().toString().equals("")) {
+                RequestUtil.makeSnackBar(activity, view, "Введите название");
+                return;
+            }
+            if (durationAutoCompleteTextView.getText().toString().equals("")) {
+                RequestUtil.makeSnackBar(activity, view, "Выберите продолжительность слота");
+                return;
+            }
+            if (pickedStartDate == null || pickedEndDate == null) {
+                RequestUtil.makeSnackBar(activity, view, "Выберите начало и конец рабочего дня");
+                return;
+            }
+            if (pickedStartDate.toEpochDay() >= pickedEndDate.toEpochDay()) {
+                RequestUtil.makeSnackBar(activity, view, "Начало рабочего времени не может быть позже чем его конец");
+                return;
+            }
+            createSchedule(titleText.getText().toString(), durationAutoCompleteTextView.getText().toString(),
+                    daysList, checkboxFreeTimeText.getText().toString());
+        });
+        dialog.show();
+    }
+
+    private void setDateTimePickerToField(View scheduleView) {
+        TextInputLayout dateRangeLayout = scheduleView.findViewById(R.id.create_schedule_date_range_layout);
+        TextInputEditText dateRangeText = scheduleView.findViewById(R.id.create_schedule_date_range_text);
+        TextInputLayout startTimeLayout = scheduleView.findViewById(R.id.create_schedule_time_start_layout);
+        TextInputEditText startTimeText = scheduleView.findViewById(R.id.create_schedule_time_start_text);
+        TextInputLayout endTimeLayout = scheduleView.findViewById(R.id.create_schedule_time_end_layout);
+        TextInputEditText endTimeText = scheduleView.findViewById(R.id.create_schedule_time_end_text);
+        TextInputLayout checkboxHolidayLayout = scheduleView.findViewById(R.id.create_schedule_checkbox_holiday_layout);
+        TextInputEditText checkboxHolidayText = scheduleView.findViewById(R.id.create_schedule_checkbox_holiday_text);
+        TextInputLayout checkboxFreeTimeLayout = scheduleView.findViewById(R.id.create_schedule_checkbox_free_time_layout);
+        TextInputEditText checkboxFreeTimeText = scheduleView.findViewById(R.id.create_schedule_checkbox_free_time_text);
+
 
         dateRangeLayout.setEndIconOnClickListener(view -> {
             Long startDate = localDateToEpochMilli(LocalDate.now());
@@ -163,7 +228,7 @@ public class ScheduleRequestUtil {
         });
 
         boolean[] selectedDays = new boolean[7];
-        List<Integer> daysList = new ArrayList<>();
+        daysList = new ArrayList<>();
         String[] days = {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"};
         checkboxHolidayLayout.setEndIconOnClickListener(view -> {
             AlertDialog.Builder daysDialog = new AlertDialog.Builder(context);
@@ -205,61 +270,91 @@ public class ScheduleRequestUtil {
             daysDialog.setTitle("Выберите нерабочие время");
             int startFreeTime = pickedStartTime.getHour() + 1;
             int endFreeTime = pickedEndTime.getHour() - 1;
-            String[] times = new String[endFreeTime - startFreeTime];
-            boolean[] selectedTimes = new boolean[endFreeTime - startFreeTime];
-            List<Integer> timeList = new ArrayList<>();
-            for (int i = startFreeTime; i < endFreeTime; i++) {
-                times[i - startFreeTime] = i + ":00 - " + (i + 1) + ":00";
-            }
-
-            daysDialog.setMultiChoiceItems(times, selectedTimes, (dialogInterface, i, b) -> {
-                if (b) {
-                    timeList.add(i);
-                    Collections.sort(timeList);
-                } else {
-                    timeList.remove(Integer.valueOf(i));
+            if (endFreeTime - startFreeTime > 0) {
+                String[] times = new String[endFreeTime - startFreeTime];
+                boolean[] selectedTimes = new boolean[endFreeTime - startFreeTime];
+                List<Integer> timeList = new ArrayList<>();
+                for (int i = startFreeTime; i < endFreeTime; i++) {
+                    times[i - startFreeTime] = i + ":00 - " + (i + 1) + ":00";
                 }
-            });
 
-            daysDialog.setPositiveButton("OK", (dialogInterface, i) -> {
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int j = 0; j < timeList.size(); j++) {
-                    stringBuilder.append(times[timeList.get(j)]);
-                    if (j != timeList.size() - 1) {
-                        stringBuilder.append(", ");
+                daysDialog.setMultiChoiceItems(times, selectedTimes, (dialogInterface, i, b) -> {
+                    if (b) {
+                        timeList.add(i);
+                        Collections.sort(timeList);
+                    } else {
+                        timeList.remove(Integer.valueOf(i));
+                    }
+                });
+
+                daysDialog.setPositiveButton("OK", (dialogInterface, i) -> {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (int j = 0; j < timeList.size(); j++) {
+                        stringBuilder.append(times[timeList.get(j)]);
+                        if (j != timeList.size() - 1) {
+                            stringBuilder.append(", ");
+                        }
+                    }
+                    checkboxFreeTimeText.setText(stringBuilder.toString());
+                });
+
+                daysDialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
+
+                daysDialog.show();
+            } else {
+                RequestUtil.makeSnackBar(activity, view, "С такими настройками нельзя выбрать свободное время");
+            }
+        });
+    }
+
+    private void addScheduleDatesToSchedule(Schedule schedule, List<Integer> freeDaysInt, String freeTimesStr) {
+        List<DayOfWeek> freeDays = freeDaysInt.stream().map(num -> DayOfWeek.of(++num)).collect(Collectors.toList());
+        List<Pair<LocalTime, LocalTime>> freeTimes = parseFreeTimeStr(freeTimesStr);
+
+        List<ScheduleDate> availableDates = new ArrayList<>();
+        while (!pickedStartDate.isAfter(pickedEndDate)) {
+            if (freeDays.contains(pickedStartDate.getDayOfWeek())) {
+                pickedStartDate = pickedStartDate.plusDays(1);
+                continue;
+            }
+            ScheduleDate date = new ScheduleDate();
+            List<Slot> slots = new ArrayList<>();
+            date.setDate(pickedStartDate);
+            availableDates.add(date);
+            LocalTime time = pickedStartTime;
+            while (!time.isAfter(pickedEndTime) && !time.equals(pickedEndTime)) {
+                LocalTime endTime = time.plus(schedule.getDurationOfOneSlot(), ChronoUnit.SECONDS);
+                boolean slotInFreeTime = false;
+                for (Pair<LocalTime, LocalTime> pair : freeTimes) {
+                    if ((time.isAfter(pair.first) && time.isBefore(pair.second)) ||
+                            (endTime.isAfter(pair.first) && endTime.isBefore(pair.second))) {
+                        slotInFreeTime = true;
+                        break;
                     }
                 }
-                checkboxFreeTimeText.setText(stringBuilder.toString());
-            });
-
-            daysDialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
-
-            daysDialog.show();
-        });
-
-        dialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
-
-        dialog.setPositiveButton("Создать", (dialogInterface, i) -> {
-            if (titleText.getText().toString().equals("")) {
-                RequestUtil.makeSnackBar(activity, view, "Введите название");
-                return;
+                if (!slotInFreeTime) {
+                    Slot slot = new Slot();
+                    slot.setStartTime(time);
+                    slot.setEndTime(endTime);
+                    slots.add(slot);
+                }
+                time = endTime;
             }
-            if (durationAutoCompleteTextView.getText().toString().equals("")) {
-                RequestUtil.makeSnackBar(activity, view, "Выберите продолжительность слота");
-                return;
-            }
-            if (pickedStartDate == null || pickedEndDate == null) {
-                RequestUtil.makeSnackBar(activity, view, "Выберите начало и конец рабочего дня");
-                return;
-            }
-            if (pickedStartDate.toEpochDay() >= pickedEndDate.toEpochDay()) {
-                RequestUtil.makeSnackBar(activity, view, "Начало рабочего времени не может быть позже чем его конец");
-                return;
-            }
-            createSchedule(titleText.getText().toString(), durationAutoCompleteTextView.getText().toString(),
-                    daysList, checkboxFreeTimeText.getText().toString());
-        });
-        dialog.show();
+            date.setSlots(slots);
+            pickedStartDate = pickedStartDate.plusDays(1);
+        }
+
+        List<LocalDate> localDateAlreadyExisting = schedule.getAvailableDates().stream()
+                .map(ScheduleDate::getDate).collect(Collectors.toList());
+        List<ScheduleDate> newAvailableDates =
+                availableDates.stream().filter(localDateAlreadyExisting::contains).collect(Collectors.toList());
+        schedule.setAvailableDates(availableDates);
+        schedule.getAvailableDates().addAll(newAvailableDates);
+        try {
+            updateScheduleRequest(schedule);
+        } catch (JsonProcessingException e) {
+            RequestUtil.makeSnackBar(activity, view, e.getMessage());
+        }
     }
 
     private void createSchedule(String title, String durationStr, List<Integer> freeDaysInt, String freeTimesStr) {
@@ -277,7 +372,7 @@ public class ScheduleRequestUtil {
             date.setDate(pickedStartDate);
             availableDates.add(date);
             LocalTime time = pickedStartTime;
-            while (!time.isAfter(pickedEndTime)) {
+            while (!time.isAfter(pickedEndTime) && !time.equals(pickedEndTime)) {
                 LocalTime endTime = time.plus(duration, ChronoUnit.SECONDS);
                 boolean slotInFreeTime = false;
                 for (Pair<LocalTime, LocalTime> pair : freeTimes) {
@@ -300,6 +395,7 @@ public class ScheduleRequestUtil {
         }
         Schedule schedule = new Schedule();
         schedule.setTitle(title);
+        schedule.setDurationOfOneSlot(duration);
         schedule.setAvailableDates(availableDates);
         if (organizationId != null) {
             schedule.setOrganizationId(organizationId);
@@ -312,6 +408,9 @@ public class ScheduleRequestUtil {
     }
 
     private List<Pair<LocalTime, LocalTime>> parseFreeTimeStr(String freeTimeStr) {
+        if (freeTimeStr.isEmpty()) {
+            return Collections.emptyList();
+        }
         List<Pair<LocalTime, LocalTime>> freeTime = new ArrayList<>();
         String[] splitFreeTimeStr = freeTimeStr.split(", ");
         for (int i = 0; i < splitFreeTimeStr.length; i++) {
@@ -346,6 +445,35 @@ public class ScheduleRequestUtil {
     private LocalDate epochMilliToLocalDate(Long epochMilli) {
         return Instant.ofEpochMilli(epochMilli)
                 .atZone(ZoneOffset.UTC).toLocalDate();
+    }
+
+    public void updateScheduleRequest(Schedule schedule) throws JsonProcessingException {
+        RequestBody body = RequestBody.create(
+                RequestUtil.OBJECT_MAPPER.writeValueAsString(schedule), RequestUtil.MEDIA_TYPE);
+        Request request = new Request.Builder()
+                .url(RequestUtil.BASE_SCHEDULE_URL)
+                .put(body)
+                .header("Authorization", token)
+                .build();
+        RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                RequestUtil.makeSnackBar(activity, view, e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (!response.isSuccessful()) {
+                    RequestUtil.makeSnackBar(activity, view, response.message());
+                }
+                ScheduleFragment scheduleFragment = new ScheduleFragment();
+                Bundle arguments = new Bundle();
+                arguments.putString("id", schedule.getId().toString());
+                scheduleFragment.setArguments(arguments);
+                fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
+                        scheduleFragment, "SCHEDULE").commit();
+            }
+        });
     }
 
     public void createScheduleRequest(Schedule schedule) throws JsonProcessingException {

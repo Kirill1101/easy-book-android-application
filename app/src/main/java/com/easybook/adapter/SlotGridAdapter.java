@@ -2,7 +2,6 @@ package com.easybook.adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import androidx.fragment.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
@@ -14,18 +13,21 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 
 import com.easybook.R;
 import com.easybook.entity.Appointment;
 import com.easybook.entity.Slot;
 import com.easybook.fragment.AppointmentListFragment;
 import com.easybook.util.RequestUtil;
+import com.easybook.util.Util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -45,6 +47,7 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
     private List<Appointment> appointments;
     private Appointment clientAppointment;
     private String token;
+    private int contextPosition;
 
     public SlotGridAdapter(@NonNull Context context, int resource, List<Slot> slots,
                            List<Appointment> appointments, Activity activity, View view,
@@ -61,6 +64,17 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
         this.fragmentManager = fragmentManager;
         this.token = token;
         this.clientAppointment = clientAppointment;
+    }
+
+    public UUID deleteSlot() {
+        UUID id = slots.get(contextPosition).getId();
+        if (slots.get(contextPosition).getAppointmentId() == null) {
+            slots.remove(contextPosition);
+        } else {
+            RequestUtil.makeSnackBar(activity, view, "В слот, который вы хоите удалить, уже записались");
+            return null;
+        }
+        return id;
     }
 
     @Override
@@ -87,7 +101,7 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
 
         if (clientAppointment == null) {
             if (slot.getAppointmentId() != null) {
-                label.setBackgroundColor(Color.rgb(190, 190, 190));
+                label.setBackgroundResource(R.drawable.rounded_square_shape_occupied);
 
                 convertView.setOnClickListener(view -> {
                     Optional<Appointment> appointmentOptional = appointments.stream()
@@ -96,9 +110,14 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
                     if (appointmentOptional.isPresent()) {
                         Appointment appointment = appointmentOptional.get();
                         AlertDialog.Builder dialog = new AlertDialog.Builder(this.getContext());
-                        dialog.setMessage(getAppointmentStringByAppointment(appointment));
+                        dialog.setMessage(Util.getAppointmentStringByAppointment(appointment));
                         dialog.show();
                     }
+                });
+            } else {
+                convertView.setOnLongClickListener((view) -> {
+                    contextPosition = position;
+                    return false;
                 });
             }
         } else {
@@ -114,48 +133,14 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
                     createAppointmentRequest();
                 });
                 dialog.show();
-                dialog.show();
             });
         }
 
         return convertView;
     }
 
-    private String getAppointmentStringByAppointment(Appointment appointment) {
-        StringBuilder appointmentInfo = new StringBuilder();
-        appointmentInfo
-                .append("Пользователь: ")
-                .append(appointment.getUserLogin())
-                .append("\nВремя записи: ")
-                .append(appointment.getStartTime())
-                .append(" - ")
-                .append(appointment.getEndTime())
-                .append("\nДлительность записи: ")
-                .append(getDurationStringBySeconds(appointment.getDuration()))
-                .append("\nУслуги:");
-        appointment.getServices().forEach(service ->
-                appointmentInfo
-                        .append("\n \t \u2022 ")
-                        .append(service.getTitle())
-                        .append(" (")
-                        .append(getDurationStringBySeconds(service.getDuration()))
-                        .append(")"));
-        return appointmentInfo.toString();
-    }
-
-    private String getDurationStringBySeconds(Long duration) {
-        StringBuilder durationStr = new StringBuilder();
-        if (duration / 3600 > 0) {
-            durationStr.append(duration / 3600).append("ч ");
-        }
-        if ((duration % 3600) / 60 > 0) {
-            durationStr.append((duration % 3600) / 60).append("м");
-        }
-        return durationStr.toString();
-    }
-
     private void createAppointmentRequest() {
-        RequestBody body = null;
+        RequestBody body;
         try {
             body = RequestBody.create(
                     RequestUtil.OBJECT_MAPPER.writeValueAsString(clientAppointment), RequestUtil.MEDIA_TYPE);
@@ -177,7 +162,9 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                if (response.isSuccessful()) {
+                if (!response.isSuccessful()) {
+                    RequestUtil.makeSnackBar(activity, view, response.message());
+                } else {
                     try {
                         activity.runOnUiThread(() -> {
                             fragmentManager.beginTransaction().replace(R.id.fragment_container_view,

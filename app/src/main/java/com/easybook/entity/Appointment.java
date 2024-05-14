@@ -22,6 +22,8 @@ public class Appointment {
 
   private String scheduleTitle;
 
+  private UUID scheduleId;
+
   public UUID getId() {
     return id;
   }
@@ -85,5 +87,13 @@ public class Appointment {
 
   public void setScheduleTitle(String scheduleTitle) {
     this.scheduleTitle = scheduleTitle;
+  }
+
+  public UUID getScheduleId() {
+    return scheduleId;
+  }
+
+  public void setScheduleId(UUID scheduleId) {
+    this.scheduleId = scheduleId;
   }
 }
