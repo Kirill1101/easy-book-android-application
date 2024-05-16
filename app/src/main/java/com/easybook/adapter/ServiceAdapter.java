@@ -55,6 +55,10 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.ViewHold
         });
     }
 
+    public Service getCurrentItem() {
+        return services.get(contextPosition);
+    }
+
     @Override
     public int getItemCount() {
         return services.size();

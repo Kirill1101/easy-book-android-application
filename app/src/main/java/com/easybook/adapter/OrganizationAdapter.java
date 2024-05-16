@@ -56,7 +56,7 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
             arguments.putString("id", organization.getId().toString());
             organizationFragment.setArguments(arguments);
             fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
-                    organizationFragment, "ORGANIZATION").commit();
+                    organizationFragment, "ORGANIZATION").addToBackStack(null).commit();
         });
 
         holder.itemView.setOnLongClickListener((view) -> {

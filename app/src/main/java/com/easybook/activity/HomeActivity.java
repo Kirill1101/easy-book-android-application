@@ -77,6 +77,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View headerView = navigationView.getHeaderView(0);
+        TextView sideBarLogin = headerView.findViewById(R.id.side_bar_login);
+        sideBarLogin.setText(getSharedPreferences("auth", MODE_PRIVATE).getString("login" ,""));
+
         checkUserSchedules();
     }
 

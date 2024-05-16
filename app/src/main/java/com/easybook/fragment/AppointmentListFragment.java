@@ -157,7 +157,7 @@ public class AppointmentListFragment extends Fragment {
                             arguments.putString("id", id);
                             organizationFragment.setArguments(arguments);
                             getParentFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
-                                    organizationFragment, "ORGANIZATION").commit();
+                                    organizationFragment, "ORGANIZATION").addToBackStack(null).commit();
                         });
                     } catch (Exception e) {
                         RequestUtil.makeSnackBar(getActivity(), getView(), e.getMessage());
@@ -190,7 +190,7 @@ public class AppointmentListFragment extends Fragment {
                             arguments.putString("id", id);
                             scheduleFragment.setArguments(arguments);
                             getParentFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
-                                    scheduleFragment, "SCHEDULE").commit();
+                                    scheduleFragment, "SCHEDULE").addToBackStack(null).commit();
                         });
                     } catch (Exception e) {
                         RequestUtil.makeSnackBar(getActivity(), getView(), e.getMessage());

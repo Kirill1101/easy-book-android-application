@@ -55,10 +55,12 @@ public class ScheduleFragment extends Fragment {
     private Spinner dateSpinner;
     private Schedule schedule;
     private String token, login;
+    private ScheduleRequestUtil scheduleRequestUtil;
 
     private boolean currentUserIsCreator;
     private Appointment currentUserAppointment;
     private SlotGridAdapter slotGridAdapter;
+    private DateSpinnerAdapter dateSpinnerAdapter;
 
     public ScheduleFragment() {
         super(R.layout.schedule);
@@ -80,6 +82,8 @@ public class ScheduleFragment extends Fragment {
                 getSharedPreferences("auth", Context.MODE_PRIVATE).getString("token", "");
         login = activity.
                 getSharedPreferences("auth", Context.MODE_PRIVATE).getString("login", "");
+        scheduleRequestUtil = new ScheduleRequestUtil(
+                token, getActivity(), getContext(), getView(), getParentFragmentManager());
 
         Request request = new Request.Builder()
                 .url(RequestUtil.BASE_SCHEDULE_URL + "/" + getArguments().getString("id"))
@@ -160,17 +164,18 @@ public class ScheduleFragment extends Fragment {
                 serviceListFragment.setArguments(arguments);
                 getActivity().runOnUiThread(() -> {
                     getParentFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
-                            serviceListFragment, "SERVICE_LIST").commit();
+                            serviceListFragment, "SERVICE_LIST").addToBackStack("SERVICE_LIST").commit();
                 });
                 break;
             }
             case R.id.schedule_menu_edit_schedule:
-
+                scheduleRequestUtil.showEditScheduleWindow(schedule);
                 break;
             case R.id.schedule_menu_add_dates:
-                ScheduleRequestUtil scheduleRequestUtil = new ScheduleRequestUtil(
-                        token, getActivity(), getContext(), getView(), getParentFragmentManager());
                 scheduleRequestUtil.showAddDatesScheduleWindow(schedule);
+                break;
+            case R.id.schedule_menu_add_slots:
+                scheduleRequestUtil.showAddSlotsScheduleWindow(schedule, dateSpinnerAdapter.getCurrentItem());
                 break;
             case R.id.schedule_menu_share:
                 dialogShare();
@@ -285,7 +290,7 @@ public class ScheduleFragment extends Fragment {
         scheduleDates.sort(Comparator.comparing(ScheduleDate::getDate));
         scheduleDates.forEach(date ->
                 date.getSlots().sort(Comparator.comparing(Slot::getStartTime)));
-        DateSpinnerAdapter dateAdapter = new DateSpinnerAdapter(getContext(),
+        dateSpinnerAdapter = new DateSpinnerAdapter(getContext(),
                 android.R.layout.simple_spinner_item, scheduleDates);
         slotGridAdapter = new SlotGridAdapter(getView().getContext(),
                 android.R.layout.simple_list_item_1, scheduleDates.get(0).getSlots(),
@@ -296,9 +301,10 @@ public class ScheduleFragment extends Fragment {
         }
         getActivity().runOnUiThread(() -> {
             scheduleTitle.setText(schedule.getTitle());
-            dateSpinner.setAdapter(dateAdapter);
+            dateSpinner.setAdapter(dateSpinnerAdapter);
             gridView.setAdapter(slotGridAdapter);
             registerForContextMenu(gridView);
+            registerForContextMenu(dateSpinner);
         });
     }
 
@@ -313,18 +319,60 @@ public class ScheduleFragment extends Fragment {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-                dialog.setTitle("Вы уверены что хотите удалить слот?");
-                dialog.setNegativeButton("Нет", (dialogInterface, i) -> dialogInterface.dismiss());
-                dialog.setPositiveButton("Да", (dialogInterface, i) -> {
-                    UUID id = slotGridAdapter.deleteSlot();
-                    if (id != null) {
-                        deleteSlot(id);
-                    }
-                });
-                dialog.show();
+                if (slotGridAdapter.getContextPosition() != null) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                    dialog.setTitle("Вы уверены что хотите удалить слот?");
+                    dialog.setNegativeButton("Нет", (dialogInterface, i) -> dialogInterface.dismiss());
+                    dialog.setPositiveButton("Да", (dialogInterface, i) -> {
+                        UUID id = slotGridAdapter.deleteSlot();
+                        if (id != null) {
+                            deleteSlot(id);
+                        }
+                    });
+                    dialog.show();
+                } else {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                    dialog.setTitle("Вы уверены что хотите удалить дату и все слоты в ней?");
+                    dialog.setNegativeButton("Нет", (dialogInterface, i) -> dialogInterface.dismiss());
+                    dialog.setPositiveButton("Да", (dialogInterface, i) -> {
+                        UUID id = dateSpinnerAdapter.deleteDate();
+                        if (id != null) {
+                            if (dateSpinner.getAdapter().getItem(0) != null) {
+                                dateSpinner.setSelection(0);
+                                deleteDate(id);
+                            }
+                        } else {
+                            RequestUtil.makeSnackBar(getActivity(), getView(),
+                                    "В данной дате есть уже есть заятые слоты");
+                        }
+                    });
+                    dialog.show();
+                }
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void deleteDate(UUID id) {
+        Request request = new Request.Builder()
+                .url(RequestUtil.BASE_SCHEDULE_DATE_URL + "/" + id)
+                .delete()
+                .header("Authorization", token)
+                .build();
+        RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                RequestUtil.makeSnackBar(getActivity(), getView(), e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (!response.isSuccessful()) {
+                    RequestUtil.makeSnackBar(getActivity(), getView(), response.message());
+                } else {
+                    getActivity().runOnUiThread(() -> dateSpinnerAdapter.notifyDataSetChanged());
+                }
+            }
+        });
     }
 
     public void deleteSlot(UUID id) {

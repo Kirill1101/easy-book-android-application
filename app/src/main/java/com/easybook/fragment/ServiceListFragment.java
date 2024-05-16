@@ -116,6 +116,7 @@ public class ServiceListFragment extends Fragment {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case 1:
+                serviceRequestUtil.showEditServiceWindow(serviceAdapter.getCurrentItem());
                 break;
             case 2:
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());

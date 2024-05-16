@@ -71,6 +71,103 @@ public class ScheduleRequestUtil {
         this.organizationId = organizationId;
     }
 
+    public void showEditScheduleWindow(Schedule schedule) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setCancelable(false);
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View editScheduleWindow = inflater.inflate(R.layout.create_schedule, null);
+        dialog.setView(editScheduleWindow);
+
+        TextInputLayout durationLayout = editScheduleWindow.findViewById(R.id.create_schedule_duration_layout);
+        TextInputEditText titleText = editScheduleWindow.findViewById(R.id.create_schedule_schedule_title_text);
+        TextInputLayout dateRangeLayout = editScheduleWindow.findViewById(R.id.create_schedule_date_range_layout);
+        TextInputLayout startTimeLayout = editScheduleWindow.findViewById(R.id.create_schedule_time_start_layout);
+        TextInputLayout endTimeLayout = editScheduleWindow.findViewById(R.id.create_schedule_time_end_layout);
+        TextInputLayout checkboxHolidayLayout = editScheduleWindow.findViewById(R.id.create_schedule_checkbox_holiday_layout);
+        TextInputLayout checkboxFreeTimeLayout = editScheduleWindow.findViewById(R.id.create_schedule_checkbox_free_time_layout);
+        durationLayout.setVisibility(View.GONE);
+        dateRangeLayout.setVisibility(View.GONE);
+        startTimeLayout.setVisibility(View.GONE);
+        endTimeLayout.setVisibility(View.GONE);
+        checkboxHolidayLayout.setVisibility(View.GONE);
+        checkboxFreeTimeLayout.setVisibility(View.GONE);
+
+        titleText.setText(schedule.getTitle());
+
+        dialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
+
+        dialog.setPositiveButton("Сохранить", (dialogInterface, i) -> {
+            if (titleText.getText().toString().equals("")) {
+                RequestUtil.makeSnackBar(activity, view, "Введите название");
+            } else {
+                schedule.setTitle(titleText.getText().toString());
+                try {
+                    updateScheduleRequest(schedule);
+                } catch (JsonProcessingException e) {
+                    RequestUtil.makeSnackBar(activity, view, e.getMessage());
+                }
+            }
+        });
+        dialog.show();
+    }
+
+    public void showAddSlotsScheduleWindow(Schedule schedule, ScheduleDate date) {
+        List<Slot> slotForOffer = new ArrayList<>();
+        LocalTime startTime = LocalTime.of(6, 0);
+        LocalTime endTime = LocalTime.of(23, 59);
+        while (startTime.isBefore(endTime)) {
+            LocalTime currentTime = startTime;
+            boolean slotAlreadyExist = date.getSlots().stream().anyMatch(slot -> slot.getStartTime().equals(currentTime));
+            LocalTime nextTime = startTime.plusSeconds(schedule.getDurationOfOneSlot());
+            if (nextTime.equals(LocalTime.of(0,0))) {
+                break;
+            }
+            if (slotAlreadyExist) {
+                startTime = nextTime;
+                continue;
+            }
+            Slot slot = new Slot();
+            slot.setStartTime(startTime);
+            slot.setEndTime(nextTime);
+            slotForOffer.add(slot);
+            startTime = nextTime;
+        }
+
+        boolean[] selectedSlots = new boolean[slotForOffer.size()];
+        List<Integer> slotsList = new ArrayList<>();
+        String[] slots = new String[slotForOffer.size()];
+        for (int i = 0; i < slots.length; i++) {
+            slots[i] = slotForOffer.get(i).getStartTime() + " - " +  slotForOffer.get(i).getEndTime();
+        }
+
+        AlertDialog.Builder slotsDialog = new AlertDialog.Builder(context);
+        slotsDialog.setCancelable(false);
+        slotsDialog.setTitle("Выберите слоты, которые хотите добавить");
+
+        slotsDialog.setMultiChoiceItems(slots, selectedSlots, (dialogInterface, i, b) -> {
+            if (b) {
+                slotsList.add(i);
+                Collections.sort(slotsList);
+            } else {
+                slotsList.remove(Integer.valueOf(i));
+            }
+        });
+
+        slotsDialog.setPositiveButton("OK", (dialogInterface, i) -> {
+            slotsList.forEach(index -> date.getSlots().add(slotForOffer.get(index)));
+            try {
+                updateScheduleRequest(schedule);
+            } catch (JsonProcessingException e) {
+                RequestUtil.makeSnackBar(activity, view, e.getMessage());
+            }
+        });
+
+        slotsDialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
+
+        slotsDialog.show();
+    }
+
     public void showAddDatesScheduleWindow(Schedule schedule) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setCancelable(false);
@@ -471,7 +568,7 @@ public class ScheduleRequestUtil {
                 arguments.putString("id", schedule.getId().toString());
                 scheduleFragment.setArguments(arguments);
                 fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
-                        scheduleFragment, "SCHEDULE").commit();
+                        scheduleFragment, "SCHEDULE").addToBackStack(null).commit();
             }
         });
     }

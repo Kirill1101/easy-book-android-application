@@ -50,7 +50,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             arguments.putString("id", schedule.getId().toString());
             scheduleFragment.setArguments(arguments);
             fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
-                    scheduleFragment, "SCHEDULE").commit();
+                    scheduleFragment, "SCHEDULE").addToBackStack(null).commit();
         });
 
         holder.itemView.setOnLongClickListener((view) -> {

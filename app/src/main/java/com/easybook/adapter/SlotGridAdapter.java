@@ -47,7 +47,7 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
     private List<Appointment> appointments;
     private Appointment clientAppointment;
     private String token;
-    private int contextPosition;
+    private Integer contextPosition;
 
     public SlotGridAdapter(@NonNull Context context, int resource, List<Slot> slots,
                            List<Appointment> appointments, Activity activity, View view,
@@ -70,12 +70,18 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
         UUID id = slots.get(contextPosition).getId();
         if (slots.get(contextPosition).getAppointmentId() == null) {
             slots.remove(contextPosition);
+            contextPosition = null;
         } else {
             RequestUtil.makeSnackBar(activity, view, "В слот, который вы хоите удалить, уже записались");
             return null;
         }
         return id;
     }
+
+    public Integer getContextPosition() {
+        return contextPosition;
+    }
+
 
     @Override
     public Slot getItem(int position) {

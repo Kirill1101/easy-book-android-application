@@ -51,7 +51,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.slider.Slider
-            android:id="@+id/create_service_price_slider"
+            android:id="@+id/create_service_duration_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"

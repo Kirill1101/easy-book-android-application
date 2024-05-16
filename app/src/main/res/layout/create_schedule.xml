@@ -33,7 +33,6 @@
             android:orientation="horizontal"
             android:padding="8dp">
 
-
             <AutoCompleteTextView
                 android:id="@+id/create_schedule_duration_auto_complete"
                 android:layout_width="match_parent"

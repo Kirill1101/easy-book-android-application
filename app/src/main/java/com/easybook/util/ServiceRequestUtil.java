@@ -12,12 +12,11 @@ import androidx.fragment.app.FragmentManager;
 
 import com.easybook.R;
 import com.easybook.entity.Service;
-import com.easybook.fragment.OrganizationFragment;
-import com.easybook.fragment.ScheduleListFragment;
 import com.easybook.fragment.ServiceListFragment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -47,6 +46,42 @@ public class ServiceRequestUtil {
         this.scheduleId = scheduleId;
     }
 
+    public void showEditServiceWindow(Service service) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setCancelable(false);
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View createOrganizationWindow = inflater.inflate(R.layout.create_service, null);
+        dialog.setView(createOrganizationWindow);
+
+        TextInputEditText titleText = createOrganizationWindow.findViewById(R.id.create_service_title_text);
+        TextInputLayout durationLayout = createOrganizationWindow.findViewById(R.id.create_service_duration_layout);
+        TextInputLayout priceLayout = createOrganizationWindow.findViewById(R.id.create_service_price_layout);
+        Slider durationSlider = createOrganizationWindow.findViewById(R.id.create_service_duration_slider);
+        durationLayout.setVisibility(View.GONE);
+        priceLayout.setVisibility(View.GONE);
+        durationSlider.setVisibility(View.GONE);
+
+        titleText.setText(service.getTitle());
+
+        dialog.setNegativeButton("Назад", (dialogInterface, i) -> dialogInterface.dismiss());
+
+        dialog.setPositiveButton("Сохранить", (dialogInterface, i) -> {
+            if (titleText.getText().toString().equals("")) {
+                RequestUtil.makeSnackBar(activity, view, "Введите название");
+            } else {
+                service.setTitle(titleText.getText().toString());
+                try {
+                    updateServiceRequest(service);
+                } catch (JsonProcessingException e) {
+                    RequestUtil.makeSnackBar(activity, view, e.getMessage());
+                }
+            }
+        });
+
+        dialog.show();
+    }
+
     public void showCreateServiceWindow() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         dialog.setCancelable(false);
@@ -58,7 +93,7 @@ public class ServiceRequestUtil {
         TextInputEditText titleText = createOrganizationWindow.findViewById(R.id.create_service_title_text);
         TextInputEditText durationText = createOrganizationWindow.findViewById(R.id.create_service_duration_text);
         TextInputEditText priceText = createOrganizationWindow.findViewById(R.id.create_service_price_text);
-        Slider slider = createOrganizationWindow.findViewById(R.id.create_service_price_slider);
+        Slider slider = createOrganizationWindow.findViewById(R.id.create_service_duration_slider);
 
         slider.addOnChangeListener((slider1, value, fromUser) -> {
             durationText.setText(String.valueOf(value));
@@ -94,6 +129,37 @@ public class ServiceRequestUtil {
         dialog.show();
     }
 
+    private void updateServiceRequest(Service service) throws JsonProcessingException {
+        RequestBody body = RequestBody.create(
+                RequestUtil.OBJECT_MAPPER.writeValueAsString(service), RequestUtil.MEDIA_TYPE);
+        Request request = new Request.Builder()
+                .url(RequestUtil.BASE_SERVICE_URL)
+                .put(body)
+                .header("Authorization", token)
+                .build();
+        RequestUtil.HTTP_CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                RequestUtil.makeSnackBar(activity, view, e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (!response.isSuccessful()) {
+                    RequestUtil.makeSnackBar(activity, view, response.message());
+                }
+                ServiceListFragment serviceListFragment = new ServiceListFragment();
+                Bundle arguments = new Bundle();
+                arguments.putString("scheduleId", scheduleId);
+                serviceListFragment.setArguments(arguments);
+                activity.runOnUiThread(() -> {
+                    fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
+                            serviceListFragment, "SERVICE_LIST").commit();
+                });
+            }
+        });
+    }
+
     private void createServiceRequest(Service service) throws JsonProcessingException {
         RequestBody body = RequestBody.create(
                 RequestUtil.OBJECT_MAPPER.writeValueAsString(service), RequestUtil.MEDIA_TYPE);
@@ -119,7 +185,7 @@ public class ServiceRequestUtil {
                 serviceListFragment.setArguments(arguments);
                 activity.runOnUiThread(() -> {
                     fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
-                            serviceListFragment, "ORGANIZATION").commit();
+                            serviceListFragment, "SERVICE_LIST").commit();
                 });
             }
         });
@@ -148,7 +214,7 @@ public class ServiceRequestUtil {
                 serviceListFragment.setArguments(arguments);
                 activity.runOnUiThread(() -> {
                     fragmentManager.beginTransaction().replace(R.id.fragment_container_view,
-                            serviceListFragment, "ORGANIZATION").commit();
+                            serviceListFragment, "SERVICE_LIST").commit();
                 });
             }
         });

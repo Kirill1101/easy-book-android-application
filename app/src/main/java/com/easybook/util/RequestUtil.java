@@ -28,6 +28,7 @@ public class RequestUtil {
     public static final String BASE_AUTH_URL = "http://195.133.32.250:8080/auth";
     public static final String BASE_ORGANIZATION_URL = "http://195.133.32.250:8080/organization";
     public static final String BASE_SCHEDULE_URL = "http://195.133.32.250:8080/schedule";
+    public static final String BASE_SCHEDULE_DATE_URL = "http://195.133.32.250:8080/schedule-date";
     public static final String BASE_SERVICE_URL = "http://195.133.32.250:8080/service";
     public static final String BASE_APPOINTMENT_URL = "http://195.133.32.250:8080/appointment";
     public static final String BASE_SLOT_URL = "http://195.133.32.250:8080/slot";
