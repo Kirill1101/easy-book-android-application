@@ -69,7 +69,7 @@ public class SlotGridAdapter extends ArrayAdapter<Slot> {
     public UUID deleteSlot() {
         UUID id = slots.get(contextPosition).getId();
         if (slots.get(contextPosition).getAppointmentId() == null) {
-            slots.remove(contextPosition);
+            slots.remove((int) contextPosition);
             contextPosition = null;
         } else {
             RequestUtil.makeSnackBar(activity, view, "В слот, который вы хоите удалить, уже записались");

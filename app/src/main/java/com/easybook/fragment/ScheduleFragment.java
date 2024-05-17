@@ -319,8 +319,8 @@ public class ScheduleFragment extends Fragment {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case 1:
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                 if (slotGridAdapter.getContextPosition() != null) {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                     dialog.setTitle("Вы уверены что хотите удалить слот?");
                     dialog.setNegativeButton("Нет", (dialogInterface, i) -> dialogInterface.dismiss());
                     dialog.setPositiveButton("Да", (dialogInterface, i) -> {
@@ -329,9 +329,7 @@ public class ScheduleFragment extends Fragment {
                             deleteSlot(id);
                         }
                     });
-                    dialog.show();
                 } else {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                     dialog.setTitle("Вы уверены что хотите удалить дату и все слоты в ней?");
                     dialog.setNegativeButton("Нет", (dialogInterface, i) -> dialogInterface.dismiss());
                     dialog.setPositiveButton("Да", (dialogInterface, i) -> {
@@ -346,8 +344,8 @@ public class ScheduleFragment extends Fragment {
                                     "В данной дате есть уже есть заятые слоты");
                         }
                     });
-                    dialog.show();
                 }
+                dialog.show();
         }
         return super.onContextItemSelected(item);
     }
